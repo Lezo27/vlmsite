@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VLM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-size: cover;
+            background-color: #11001a;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(rgba(132, 73, 168, 0.7), rgba(0, 0, 0, 0.7)), url("https://i.ibb.co.com/whtNxgPT/vlm-logo-png.png") center/cover no-repeat;
+            height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            color: #f40be8;
+            text-shadow: 0 0 10px rgba(51, 26, 40, 0.5);
+        }
+        
+        header p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin-bottom: 2rem;
+        }
+        
+        .server-ip {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f40be8;
+            border: 2px solid #f40be8;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .server-ip:hover {
+            background-color: rgba(78, 218, 137, 0.2);
+        }
+        
+        nav {
+            background-color: #2b192b;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ea19cb;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 2rem;
+        }
+        
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #f40be8;
+        }
+        
+        section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        section h2 {
+            font-size: 2.5rem;
+            color: #ee7ed9;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .about {
+            background-color: #2b192b;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .about p {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .ranks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .rank-card {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .rank-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(229, 87, 198, 0.386);
+        }
+        
+        .rank-header {
+            background-color: #da4ed5;
+            color: #121212;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .rank-header h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .rank-price {
+            font-size: 2.2rem;
+            font-weight: bold;
+        }
+        
+        .rank-features {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .rank-features ul {
+            list-style: none;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .rank-features li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .rank-features li:last-child {
+            border-bottom: none;
+        }
+        
+        .buy-btn {
+    background: linear-gradient(135deg, #7FFF7F, #800080); /* Hijau muda ke ungu tua */
+    color: #121212;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+/* Efek hover */
+.buy-btn:hover {
+    background: linear-gradient(135deg, #189718, #e679e6); /* Sedikit lebih gelap saat hover */
+}
+
+        
+        .staff {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .staff-card {
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .staff-card:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, #1b1c1b, #6A006A); /* Sedikit lebih gelap saat hover */
+        }
+        
+        .staff-img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 2rem auto 1rem;
+            border: 4px solid #f40be8;
+        }
+        
+        .staff-info {
+            padding: 1rem;
+        }
+        
+        .staff-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: #f40be8;
+        }
+        
+        .staff-role {
+            color: #aaa;
+            margin-bottom: 1rem;
+        }
+        
+        .rules {
+            background-color: #2b192b;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        .rules ol {
+            margin-left: 2rem;
+        }
+        
+        .rules li {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        footer {
+            background-color: #2b192b;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        footer p {
+            margin-bottom: 1rem;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            margin: 0 1rem;
+            color: #f40be8;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-links a:hover {
+            color: #3cb371;
+        }
+
+        .limits {
+            display: flex;
+            justify-content: space-around;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .limit-item {
+            text-align: center;
+            margin: 0.5rem;
+        }
+
+        .limit-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5rem;
+            }
+            
+            header p {
+                font-size: 1.1rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+            }
+            
+            .nav-links {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .nav-links li {
+                margin: 0.5rem;
+            }
+        }
+           /* Chat Button Styles */
+    .chat-button {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background: linear-gradient(135deg, #7FFF7F, #800080);
+        color: white;
+        border-radius: 50px;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .chat-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        background: linear-gradient(135deg, #189718, #e679e6);
+    }
+
+    .chat-icon {
+        font-size: 24px;
+    }
+
+    /* Chat Popup Styles */
+    .chat-popup {
+        position: fixed;
+        bottom: 100px;
+        right: 30px;
+        width: 350px;
+        height: 450px;
+        background-color: #222;
+        border-radius: 10px;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        overflow: hidden;
+        display: none;
+        border: 2px solid #f40be8;
+    }
+
+    .chat-header {
+        background: linear-gradient(90deg, #7FFF7F, #800080);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-header h3 {
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .chat-messages {
+        flex: 1;
+        padding: 15px;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .user-message, .assistant-message {
+        padding: 10px 15px;
+        border-radius: 18px;
+        max-width: 80%;
+        word-break: break-word;
+    }
+
+    .user-message {
+        background-color: #4a4a4a;
+        color: white;
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+    }
+
+    .assistant-message {
+        background: linear-gradient(135deg, rgba(127, 255, 127, 0.2), rgba(128, 0, 128, 0.2));
+        color: #f0f0f0;
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+    }
+
+    .chat-input-container {
+        display: flex;
+        padding: 10px;
+        background-color: #333;
+        border-top: 1px solid #444;
+    }
+
+    #chatInput {
+        flex: 1;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 20px;
+        background-color: #444;
+        color: white;
+    }
+
+    #chatInput:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #f40be8;
+    }
+
+    #sendMessage {
+        background: linear-gradient(135deg, #7FFF7F, #800080);
+        color: white;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 15px;
+        margin-left: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    #sendMessage:hover {
+        background: linear-gradient(135deg, #189718, #e679e6);
+    }
+    </style>
+        <link rel="icon" type="image/png" href="img/vlmlogo.png">
+</head>
+<body>
+    <header>
+        <h1>VLM SMP!</h1>
+        <p>Selamat datang di server Minecraft terbaik! Bergabunglah dengan komunitas kami untuk pengalaman bermain yang seru dan menyenangkan.</p>
+        <div class="server-ip" id="serverIP">vlmsmp.raznar.uk:10008</div>
+    </header>
+    
+    <nav>
+        <div class="nav-container">
+            <div class="logo">VLM SMP</div>
+            <ul class="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#ranks">Rank</a></li>
+                <li><a href="#staff">Anggota</a></li>
+                <li><a href="#rules">Rules</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <section id="about">
+        <h2>Tentang Server Kami</h2>
+        <div class="about">
+            <p>Selamat datang di server Minecraft kami! Server ini dibuat dengan tujuan untuk menyediakan pengalaman bermain yang seru dan menyenangkan bagi semua pemain.</p>
+            <p>Kami menawarkan berbagai fitur menarik seperti ekonomi yang seimbang, sistem perlindungan wilayah, minigame yang seru, dan komunitas yang ramah dan aktif.</p>
+            <p>Server kami mendukung versi Minecraft terbaru dan memiliki sistem anti-cheat yang canggih untuk memastikan permainan yang adil bagi semua pemain.</p>
+            <p>Bergabunglah dengan kami sekarang dan mulai petualangan Minecraft terbaik Anda!</p>
+        </div>
+    </section>
+    
+    <section id="ranks">
+        <h2>Rank yang Tersedia</h2>
+        <div class="ranks">
+            <div class="rank-card">
+                <div class="rank-header">
+                    <h3>🛡️ Guardian</h3>
+                    <div class="rank-price">Rp 25.000</div>
+                </div>
+                <div class="rank-features">
+                    <ul>
+                        <li><strong>Perks:</strong></li>
+                        <li>Enderchest</li>
+                        <li>Feed</li>
+                        <li>Kit Guardian</li>
+                        <li>Workbench</li>
+                    </ul>
+                    <div class="limits">
+                        <div class="limit-item">
+                            <div class="limit-icon">🏠</div>
+                            <div>Claim: 3</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🧱</div>
+                            <div>Block: 7,500</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🔖</div>
+                            <div>Sethome: 5</div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/yMZ3emGhSd" class="buy-btn">Beli Sekarang</a>
+                </div>
+            </div>
+            
+            <div class="rank-card">
+                <div class="rank-header">
+                    <h3>🚀 Invader</h3>
+                    <div class="rank-price">Rp 50.000</div>
+                </div>
+                <div class="rank-features">
+                    <ul>
+                        <li><strong>Perks:</strong></li>
+                        <li>Beezooka</li>
+                        <li>Anvil</li>
+                        <li>Nick</li>
+                        <li>Kit Invader</li>
+                        <li>UC Menu Emoji [Angry]</li>
+                        <li>(teleport nether Unlocked)</li>
+                    </ul>
+                    <div class="limits">
+                        <div class="limit-item">
+                            <div class="limit-icon">🏠</div>
+                            <div>Claim: 5</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🧱</div>
+                            <div>Block: 9,000</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🔖</div>
+                            <div>Sethome: 10</div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/yMZ3emGhSd" class="buy-btn">Beli Sekarang</a>
+                </div>
+            </div>
+            
+            <div class="rank-card">
+                <div class="rank-header">
+                    <h3>⚔️ Commander</h3>
+                    <div class="rank-price">Rp 85.000</div>
+                </div>
+                <div class="rank-features">
+                    <ul>
+                        <li><strong>Perks:</strong></li>
+                        <li>Heal</li>
+                        <li>Fly</li>
+                        <li>Repair</li>
+                        <li>Kit Commander</li>
+                        <li>(teleport TheEnd Unlocked)</li>
+                    </ul>
+                    <div class="limits">
+                        <div class="limit-item">
+                            <div class="limit-icon">🏠</div>
+                            <div>Claim: 8</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🧱</div>
+                            <div>Block: 13,000</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🔖</div>
+                            <div>Sethome: 15</div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/yMZ3emGhSd" class="buy-btn">Beli Sekarang</a>
+                </div>
+            </div>
+            
+            <div class="rank-card">
+                <div class="rank-header">
+                    <h3>🏆 Champion</h3>
+                    <div class="rank-price">Rp 125.000</div>
+                </div>
+                <div class="rank-features">
+                    <ul>
+                        <li><strong>Perks:</strong></li>
+                        <li>itemname</li>
+                        <li>Head</li>
+                        <li>Kit Champion</li>
+                    </ul>
+                    <div class="limits">
+                        <div class="limit-item">
+                            <div class="limit-icon">🏠</div>
+                            <div>Claim: 10</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🧱</div>
+                            <div>Block: 23,000</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🔖</div>
+                            <div>Sethome: 25</div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/yMZ3emGhSd" class="buy-btn">Beli Sekarang</a>
+                </div>
+            </div>
+            
+            <div class="rank-card">
+                <div class="rank-header">
+                    <h3>👑 Conqueror</h3>
+                    <div class="rank-price">Rp 150.000</div>
+                </div>
+                <div class="rank-features">
+                    <ul>
+                        <li><strong>Perks:</strong></li>
+                        <li>Grindstone</li>
+                        <li>Loom</li>
+                        <li>Time</li>
+                        <li>Kit Conqueror</li>
+                    </ul>
+                    <div class="limits">
+                        <div class="limit-item">
+                            <div class="limit-icon">🏠</div>
+                            <div>Claim: 20</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🧱</div>
+                            <div>Block: 40,000</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🔖</div>
+                            <div>Sethome: 50</div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/yMZ3emGhSd" class="buy-btn">Beli Sekarang</a>
+                </div>
+            </div>
+            
+            <div class="rank-card">
+                <div class="rank-header">
+                    <h3>🌟 Promethalia</h3>
+                    <div class="rank-price">Rp 260.000</div>
+                </div>
+                <div class="rank-features">
+                    <ul>
+                        <li><strong>Perks:</strong></li>
+                        <li>/minecraft:tp (nama)</li>
+                        <li>Kit Promethalia</li>
+                        <li>UC MENU (UNLOCK ALL)</li>
+                    </ul>
+                    <div class="limits">
+                        <div class="limit-item">
+                            <div class="limit-icon">🏠</div>
+                            <div>Claim: 30</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🧱</div>
+                            <div>Block: 60,000</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🔖</div>
+                            <div>Sethome: Unlimited</div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/yMZ3emGhSd" class="buy-btn">Beli Sekarang</a>
+                </div>
+            </div>
+            
+            <div class="rank-card">
+                <div class="rank-header">
+                    <h3>🌟 Celestial</h3>
+                    <div class="rank-price">Rp 400.000</div>
+                </div>
+                <div class="rank-features">
+                    <ul>
+                        <li><strong>Perks:</strong></li>
+                        <li>GOD (/godmode)</li>
+                        <li>Kit CELESTIAL (Ada key Sl 2 disertai armor mending)</li>
+                        <li>Vanish (/essentials:vanish)</li>
+                        <li>Keep Inventory Di Semua world</li>
+                    </ul>
+                    <div class="limits">
+                        <div class="limit-item">
+                            <div class="limit-icon">🏠</div>
+                            <div>Claim: Unlimited</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🧱</div>
+                            <div>Block: Unlimited</div>
+                        </div>
+                        <div class="limit-item">
+                            <div class="limit-icon">🔖</div>
+                            <div>Sethome: Unlimited</div>
+                        </div>
+                    </div>
+                    <a href="https://discord.gg/yMZ3emGhSd" class="buy-btn">Beli Sekarang</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="staff">
+        <h2>DAFTAR ANGGOTA</h2>
+        <div class="staff">
+            <div class="staff-card">
+                <img src="img/lezohead.png" alt="Owner" class="staff-img">
+                <div class="staff-info">
+                    <div class="staff-name">Lezzo</div>
+                    <div class="staff-role">Owner</div>
+                    <p>Memegang kendali console. Bertanggung jawab atas semua aspek server. Mengelola Plugin, Konsep dan sistem dalam server</p>
+                </div>
+            </div>
+            
+            <div class="staff-card">
+                <img src="img/gabehead.png" alt="Admin 1" class="staff-img">
+                <div class="staff-info">
+                    <div class="staff-name">Gabe</div>
+                    <div class="staff-role">Administrator</div>
+                    <p>Mengelola komunitas dan mengembangkan ide ide baru.</p>
+                </div>
+            </div>
+            
+            <div class="staff-card">
+                <img src="img/zikarihead.png" alt="Admin 2" class="staff-img">
+                <div class="staff-info">
+                    <div class="staff-name">Zikari</div>
+                    <div class="staff-role">Administrator</div>
+                    <p>Menjaga keamanan dari player yang ingin merusak komunitas</p>
+                </div>
+            </div>
+            
+            <div class="staff-card">
+                <img src="img/lanzkyhead.png" alt="Staff 1" class="staff-img">
+                <div class="staff-info">
+                    <div class="staff-name">Lanzky</div>
+                    <div class="staff-role">Staff</div>
+                    <p>Memastikan peraturan server dipatuhi dan membantu pemain.</p>
+                </div>
+            </div>
+            
+            <div class="staff-card">
+                <img src="img/wykeehead.png" alt="Staff 2" class="staff-img">
+                <div class="staff-info">
+                    <div class="staff-name">Wykee</div>
+                    <div class="staff-role">Staff</div>
+                    <p>Staff rasa Builder</p>
+                </div>
+            </div>
+            
+            <div class="staff-card">
+                <img src="img/munhead.png" alt="Brand Ambassador" class="staff-img">
+                <div class="staff-info">
+                    <div class="staff-name">MoonKazanee</div>
+                    <div class="staff-role">Brand Ambassador</div>
+                    <p>Mempromosikan server dan membantu memperluas komunitas pemain.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    
+    <section id="rules">
+        <h2>Peraturan Server</h2>
+        <div class="rules">
+            <ol>
+                <li><strong>No Griefing:</strong> Dilarang merusak bangunan atau properti pemain lain tanpa izin.</li>
+                <li><strong>No Cheating/Hacking:</strong> Penggunaan mod atau program yang memberikan keuntungan tidak adil dilarang keras.</li>
+                <li><strong>No Spamming:</strong> Jangan mengirim pesan berulang atau tidak perlu di chat server.</li>
+                <li><strong>Respect All Players:</strong> Hormati semua pemain dan staff. Perilaku toxic, rasis, atau kasar tidak ditoleransi.</li>
+                <li><strong>No Advertising:</strong> Dilarang mempromosikan server Minecraft lain atau layanan eksternal.</li>
+                <li><strong>No Excessive Redstone:</strong> Hindari membuat mesin redstone yang terlalu kompleks yang dapat menyebabkan lag.</li>
+                <li><strong>No AFK Farming:</strong> Penggunaan AFK farm yang berlebihan tidak diperbolehkan.</li>
+                <li><strong>Report Bugs:</strong> Laporkan bug ke staff dan jangan memanfaatkannya.</li>
+                <li><strong>Follow Staff Instructions:</strong> Selalu ikuti instruksi dari staff server.</li>
+                <li><strong>Have Fun:</strong> Ingat tujuan utama adalah bersenang-senang dan membangun komunitas yang positif!</li>
+                <li><strong>No Refund:</strong> Selepas membeli tidak dapat di refund!</li>
+            </ol>
+        </div>
+    </section>
+    
+    <footer>
+        <p>© 2025 Server Minecraft Anda. Semua hak dilindungi.</p>
+        <p>IP Server: <strong>vlmsmp.raznar.uk:10008</strong></p>
+        <div class="social-links">
+            <a href="https://discord.gg/yMZ3emGhSd"><i>Discord</i></a>
+            <a href="https://minecraft-mp.com/server-s338506"><i>Vote</i></a>
+            <a href="https://www.tiktok.com/@vlmsmp.official"><i>TikTok</i></a>
+        </div>
+    </footer>
+    
+    <script>
+           // Chat functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatButton = document.getElementById('chatButton');
+        const chatPopup = document.getElementById('chatPopup');
+        const closeChat = document.getElementById('closeChat');
+        const chatInput = document.getElementById('chatInput');
+        const sendMessage = document.getElementById('sendMessage');
+        const chatMessages = document.getElementById('chatMessages');
+
+        // Open chat popup when button is clicked
+        chatButton.addEventListener('click', function() {
+            chatPopup.style.display = 'flex';
+            chatButton.style.display = 'none';
+        });
+
+        // Close chat popup
+        closeChat.addEventListener('click', function() {
+            chatPopup.style.display = 'none';
+            chatButton.style.display = 'flex';
+        });
+
+        // Send message function
+        function sendUserMessage() {
+            const message = chatInput.value.trim();
+            if (message !== '') {
+                // Add user message to chat
+                const userMessageElement = document.createElement('div');
+                userMessageElement.className = 'user-message';
+                userMessageElement.textContent = message;
+                chatMessages.appendChild(userMessageElement);
+                
+                // Clear input
+                chatInput.value = '';
+                
+                // Auto-scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate assistant response (You'll replace this with your API call)
+                setTimeout(function() {
+                    simulateAssistantResponse(message);
+                }, 1000);
+            }
+        }
+
+        // Send message by clicking button
+        sendMessage.addEventListener('click', sendUserMessage);
+
+        // Send message by pressing Enter
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendUserMessage();
+            }
+        });
+
+        // Simulate assistant response (Replace this with your API integration)
+        function simulateAssistantResponse(userMessage) {
+            // This is a placeholder - you'll replace this with your actual API call
+            let response = 'Kami belum menerima Text asal, silahkan coba kata berikut (server) (rank) (aturan)';
+            
+            // Simple response logic (temporary, replace with API)
+            if (userMessage.toLowerCase().includes('server')) {
+                response = "Server kami memiliki alamat IP: vlmsmp.raznar.uk:10008 dan juga IP: vlmsmp.site, Silakan bergabung dengan kami!";
+            } else if (userMessage.toLowerCase().includes('rank') || userMessage.toLowerCase().includes('harga')) {
+                response = "Kami memiliki beberapa rank mulai dari Guardian (Rp 25.000) hingga Celestial (Rp 400.000). Masing-masing rank memiliki fitur berbeda. Selengkapnya ada di halaman website!";
+            } else if (userMessage.toLowerCase().includes('aturan') || userMessage.toLowerCase().includes('rule')) {
+                response = "Aturan utama kami adalah no griefing, no cheating, hormati semua pemain, dan yang terpenting bersenang-senang! Selengkapnya ada di halaman website!";
+            }
+
+            // Add assistant response to chat
+            const assistantMessageElement = document.createElement('div');
+            assistantMessageElement.className = 'assistant-message';
+            assistantMessageElement.textContent = response;
+            chatMessages.appendChild(assistantMessageElement);
+            
+            // Auto-scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    });
+        // Script untuk copy IP server saat diklik
+        document.getElementById('serverIP').addEventListener('click', function() {
+            const ip = this.innerText;
+            navigator.clipboard.writeText(ip).then(() => {
+                alert('IP Server telah disalin: ' + ip);
+            });
+        });
+        
+        // Smooth scrolling untuk navigasi
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+    <div class="chat-button" id="chatButton">
+        <div class="chat-icon">💬</div>
+        <span>Chat with VLM Assistant</span>
+    </div>
+    
+    <!-- Chat Popup -->
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-header">
+            <h3>VLM Assistant</h3>
+            <button class="close-btn" id="closeChat">×</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="assistant-message">
+                Halo! Saya VLM Assistant. Ada yang bisa saya bantu terkait server VLM SMP?
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="chatInput" placeholder="Ketik pesan Anda di sini...">
+            <button id="sendMessage">Kirim</button>
+        </div>
+</body>
+</html>
